@@ -1,0 +1,36 @@
+services:
+  master:
+    image: jenkins/jenkins:lts-jdk11
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - jenkins-home:/var/jenkins_home
+    restart: on-failure
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-sL",
+          "-w",
+          "%{http_code}",
+          "localhost:8080"
+        ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  agent:
+    build: ./blender-tester-node
+    init: True
+    env_file:
+      - ./.env
+    depends_on:
+      master:
+        condition: service_healthy
+        restart: true
+
+volumes:
+  jenkins-home:
+    name: jenkins_jenkins-home
