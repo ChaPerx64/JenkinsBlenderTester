@@ -26,6 +26,7 @@ services:
     init: True
     env_file:
       - ./.env
+    restart: on-failure
     depends_on:
       master:
         condition: service_healthy
