@@ -6,7 +6,7 @@ services:
       - 50000:50000
     volumes:
       - jenkins-home:/var/jenkins_home
-    restart: on-failure
+    restart: unless-stopped
     healthcheck:
       test:
         [
@@ -26,7 +26,7 @@ services:
     init: True
     env_file:
       - ./.env
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       master:
         condition: service_healthy
